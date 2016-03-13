@@ -1,0 +1,3 @@
+[webservers]
+
+phpmelb.api ansible_ssh_user=vagrant env=local_dev testing=false

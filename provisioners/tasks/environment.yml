@@ -1,0 +1,14 @@
+---
+- name: Bash | Copy Bash alias file for root
+  template: src="{{ templates_dir }}/environment/bash_aliases.j2" dest=~/.bash_aliases
+
+- name: Apache | Check /home/vagrant path exists
+  file: dest=/home/vagrant state=directory
+
+- name: Bash | Copy Bash alias file for normal user
+  template: src="{{ templates_dir }}/environment/bash_aliases.j2" dest=/home/{{ ansible_ssh_user }}/.bash_aliases
+
+- name: Install required environment packages
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - ntp

@@ -1,0 +1,2 @@
+[webservers]
+poly-prod ansible_ssh_user=ubuntu env=prod testing=false

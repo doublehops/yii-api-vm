@@ -1,0 +1,9 @@
+---
+mariadb_root_password: phpmelb
+mariadb_dev_username: phpmelb
+mariadb_dev_password: phpmelb
+mariadb_database_name: phpmelb
+
+system_user: vagrant
+
+shell_prompt: '`EXT_COLOR 88`LOCAL_DEV [\u@\h \W]\$`EXT_COLOR 255` '

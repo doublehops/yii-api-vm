@@ -1,0 +1,2 @@
+[webservers]
+poly-test ansible_ssh_user=ubuntu env=test testing=false

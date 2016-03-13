@@ -1,0 +1,32 @@
+---
+  - name: MySQL | Install MySQL
+    apt: pkg={{ item }} state=installed force=yes
+    with_items:
+      - mysql-server
+      - mysql-client
+      - python-mysql.connector
+      - python-mysqldb
+
+  - name: MySQL | Set root password
+    mysql_user: name=root password={{ mysql_root_password }} priv=*.*:ALL,GRANT state=present
+
+  - name: MySQL | Copy root password config to root user
+    template: src="{{ templates_dir }}/mysql/my.cnf.j2" dest=/root/.my.cnf
+
+  - name: MySQL | Copy root password config to normal user
+    template: src="{{ templates_dir }}/mysql/my.cnf.j2" dest=~/.my.cnf
+
+  - name: MySQL | Create dev user
+    mysql_user: login_user=root login_password={{ mysql_root_password }} name={{ mysql_dev_username }} password={{ mysql_dev_password }} priv=*.*:ALL,GRANT state=present
+
+#  - name: MySQL | Create read-only user
+#    mysql_user: login_user=root login_password={{ mysql_root_password }} name={{ mysql_ro_username }} password={{ mysql_ro_password }} priv=*.*:"SELECT,SHOW VIEW,PROCESS",GRANT state=present
+
+  - name: MySQL | Create development database
+    mysql_db: name={{ mysql_dev_database }}
+
+  - name: MySQL | Create test database
+    mysql_db: name={{ mysql_test_database }}
+
+  - name: MySQL | Check that database backup path exists
+    file: dest=/var/www/files/database state=directory mode=777

@@ -1,0 +1,23 @@
+---
+  - name: Install PHP5
+    apt: pkg={{ item }} state=latest force=yes
+    with_items:
+      - php5-fpm
+      - php5-mysql
+      - php5-cli
+      - php5-curl
+      - php5-mcrypt
+      - phpunit
+
+  - name: PHP | PHPDev | Install composer
+    shell:
+      curl -sS https://getcomposer.org/installer | /usr/bin/php && /bin/mv -f /home/vagrant/composer.phar /usr/bin/composer
+      creates=/usr/bin/composer
+
+  - name: PHP | Ensure listen.group is set.
+    lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp='listen.group = www-data' line='listen.group = www-data' state=present
+    notify: php5-fpm-restart
+
+  - name: PHP | Ensure listen.owner is set.
+    lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp='listen.owner = www-data' line='listen.owner = www-data' state=present
+    notify: php5-fpm-restart

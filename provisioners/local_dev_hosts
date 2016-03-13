@@ -1,0 +1,5 @@
+[webservers]
+poly.api ansible_ssh_user=vagrant env=local_dev testing=false
+
+[local_dev]
+poly.api ansible_ssh_user=vagrant env=local_dev testing=false

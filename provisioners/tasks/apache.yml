@@ -1,0 +1,64 @@
+---
+- name: Apache | Install Apache
+  apt: pkg=apache2 state=latest force=yes
+
+- name: Apache | Enable mod_rewrite
+  apache2_module: state=present name=rewrite
+
+- name: Apache | Check docroot path exists
+  file: dest=/var/www/web state=directory owner={{ ansible_ssh_user }} group={{ ansible_ssh_user }}
+
+- name: Apache | Check vhosts path exists
+  file: dest=/etc/apache2/sites-available state=directory
+
+- name: Apache | Remove default index file
+  file: dest=/var/www/index.html state=absent
+
+- name: Apache | Copy vhost files
+  copy: src="{{ templates_dir }}/apache/{{env}}_poly.conf" dest=/etc/apache2/sites-available/poly.conf owner=root group=root mode=666
+  notify: 
+  - apache2-restart
+
+- name: Apache | Create vhost symlinks
+  file: path=/etc/apache2/sites-enabled/poly.conf state=link src=/etc/apache2/sites-available/poly.conf
+  notify: 
+  - apache2-restart
+
+- name: Apache | Remove default vhost
+  file: dest=/etc/apache2/sites-available/000-default state=absent
+- name: Apache | Remove default vhost enabled symlink
+  file: dest=/etc/apache2/sites-enabled/000-default state=absent
+
+- name: Apache | Remove default vhost
+  file: dest=/etc/apache2/sites-available/000-default.conf state=absent
+- name: Apache | Remove default vhost enabled symlink
+  file: dest=/etc/apache2/sites-enabled/000-default.conf state=absent
+
+- name: Apache | Ensure directory exists
+  file: dest=/var/www state=directory owner="{{system_user}}" group="{{system_user}}"
+
+- name: Apache | Ensure log directory exists
+  file: dest=/var/log/apache2 state=directory
+
+- name: Apache | Ensure path exists and writable
+  file: dest=/var/www/frontend/runtime state=directory mode=777
+
+- name: Apache | Ensure path exists and writable
+  file: dest=/var/www/backend/runtime state=directory mode=777
+
+- name: Apache | Ensure path exists and writable
+  file: dest=/var/www/backend/web/assets state=directory mode=777
+
+- name: Apache | Ensure path exists and writable
+  file: dest=/var/www/web/assets state=directory mode=777
+
+- name: Apache | Ensure tests path exists and writable
+  file: dest=/var/www/tests state=directory mode=777 recurse=yes
+
+- name: Apache | Ensure Apache is running
+  service:
+    name=apache2
+    state=started
+
+- name: Apache | Remove default web path
+  file: dest=/var/www/html state=absent

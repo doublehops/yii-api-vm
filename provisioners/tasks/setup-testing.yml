@@ -1,0 +1,3 @@
+---
+  - name: Testing | Add domains to /etc/hosts for local_dev
+    lineinfile: dest=/etc/hosts regexp="poly.api" line="127.0.0.1    poly.api poly.test admin.poly.api admin.poly.test local.test"

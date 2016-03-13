@@ -1,0 +1,22 @@
+---
+- hosts: webservers
+  user: vagrant
+  sudo: yes
+
+  vars_files:
+  - vars/{{env}}_vars.yml
+
+  vars:
+    templates_dir: "templates"
+
+  tasks:
+    - include: tasks/base.yml
+    - include: tasks/environment.yml
+    - include: tasks/add_ppas.yml
+    - include: tasks/nginx.yml
+    - include: tasks/php.yml
+    - include: tasks/mariadb.yml
+
+  handlers:
+    - include: handlers/nginx.yml
+    - include: handlers/mariadb.yml

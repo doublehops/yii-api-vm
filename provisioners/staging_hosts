@@ -1,0 +1,2 @@
+[webservers]
+poly-staging ansible_ssh_user=ubuntu env=staging testing=false
