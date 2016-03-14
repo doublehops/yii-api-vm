@@ -5,7 +5,7 @@ namespace frontend\controllers;
 use yii;
 use yii\rest\ActiveController;
 
-class UserController extends ActiveController
+class UserController extends BaseController
 {
     public $modelClass = 'common\models\User';
 
