@@ -40,8 +40,9 @@ return [
             'enableStrictParsing' => false,
             'showScriptName' => false,
             'rules' => [
-                '<controller:[^/]+>/<action:[^/]+>' => '<controller>/<action>',
-                '<controller:[^/]+>/<action:[^/]+>/<id:\d+>' => '<controller>/<action>',
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'user', 'pluralize' => false],
+//                '<controller:[^/]+>/<action:[^/]+>' => '<controller>/<action>',
+//                '<controller:[^/]+>/<action:[^/]+>/<id:\d+>' => '<controller>/<action>',
             ],
         ],
         'request' => [
