@@ -2,11 +2,10 @@
 
 namespace frontend\controllers;
 
-class UserController extends \yii\web\Controller
+use yii\rest\ActiveController;
+
+class UserController extends ActiveController
 {
-    public function actionIndex()
-    {
-        return $this->render('index');
-    }
+    public $modelClass = 'common\models\User';
 
 }

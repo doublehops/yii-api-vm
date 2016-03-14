@@ -35,14 +35,20 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
+            'enableStrictParsing' => false,
             'showScriptName' => false,
             'rules' => [
+                '<controller:[^/]+>/<action:[^/]+>' => '<controller>/<action>',
+                '<controller:[^/]+>/<action:[^/]+>/<id:\d+>' => '<controller>/<action>',
             ],
         ],
-        */
+        'request' => [
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ]
+]
     ],
     'params' => $params,
 ];
