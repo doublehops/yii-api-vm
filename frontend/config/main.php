@@ -11,6 +11,12 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
+    'modules' => [
+        'gii' => [
+            'class' => 'yii\gii\Module',
+            'allowedIPs' => ['192.168.10.1'],
+        ],
+    ],
     'components' => [
         'db' => require(__DIR__ .'/../../common/config/db.php'),
         'user' => [
