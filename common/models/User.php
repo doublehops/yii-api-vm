@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "user".
@@ -17,8 +19,10 @@ use Yii;
  * @property integer $created_at
  * @property integer $updated_at
  */
-class User extends \yii\db\ActiveRecord
+class User extends ActiveRecord implements IdentityInterface
 {
+    public $password;
+
     /**
      * @inheritdoc
      */
@@ -33,9 +37,9 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['username', 'password_hash', 'email'], 'required'],
+            [['username', 'email'], 'required'],
             [['status', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
+            [['username', 'password', 'password_reset_token', 'email'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['username'], 'unique'],
             [['email'], 'unique'],
@@ -59,5 +63,74 @@ class User extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
+    }
+
+    public static function findIdentityByUsernamePassword($username, $password)
+    {
+        $user = User::find()->where(['username' => $username])->one();
+
+        if(!$user) {
+            return false;
+        }
+
+        if(!self::verifyPassword($password, $user->password_hash)) {
+            return false;
+        }
+
+        $user->updateAccessToken();
+
+        return $user;
+    }
+
+    public static function verifyPassword($password, $passwordHash)
+    {
+        return \Yii::$app->getSecurity()->validatePassword($password, $passwordHash);
+    }
+
+    public function beforeSave($insert)
+    {
+        if(parent::beforeSave($insert)) {
+            if($insert == true) {
+                $this->password_hash = Yii::$app->getSecurity()->generatePasswordHash($this->password);
+            }
+        }
+        return true;        
+    }
+
+    protected function updateAccessToken()
+    {
+        $this->access_token = Yii::$app->getSecurity()->generateRandomString(128);
+        $this->save();
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        return static::findOne(['access_token' => $token]);
+    }
+
+    public static function findIdentity($id)
+    {
+        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+    }
+    
+    public function getId()
+    {
+        return $this->getPrimaryKey();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAuthKey()
+    {
+        return $this->auth_key;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function validateAuthKey($authKey)
+    {
+        return $this->getAuthKey() === $authKey;
     }
 }

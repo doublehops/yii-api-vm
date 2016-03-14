@@ -18,14 +18,9 @@ class BaseController extends ActiveController
 {
     public function behaviors()
     {
-
         return ArrayHelper::merge([
             'corsFilter' => [
                 'class' => Cors::className(),
-            ],
-            [
-                'class' => HttpBearerAuth::className(),
-                'except' => ['options'],
             ],
         ], parent::behaviors());
 
