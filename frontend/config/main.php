@@ -12,6 +12,7 @@ return [
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
+        'db' => require(__DIR__ .'/../../common/config/db.php'),
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
