@@ -13,6 +13,7 @@ return [
     'bootstrap' => ['log'],
     'modules' => [],
     'components' => [
+        'db' => require(__DIR__ .'/../../common/config/db.php'),
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
