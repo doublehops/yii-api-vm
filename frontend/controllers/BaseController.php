@@ -16,7 +16,8 @@ use yii\filters\auth\HttpBearerAuth;
  */
 class BaseController extends ActiveController
 {
-    public function behaviors() {
+    public function behaviors()
+    {
 
         return ArrayHelper::merge([
             'corsFilter' => [
