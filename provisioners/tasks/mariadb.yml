@@ -7,11 +7,11 @@
       - python-mysql.connector
       - python-mysqldb
 
-  - name: MariaDB | Copy root password config for root user
-    template: src="{{ templates_dir }}/mariadb/my.cnf.j2" dest=/root/.my.cnf
-
   - name: MariaDB | Set root password
     mysql_user: name=root password={{ mariadb_root_password }} priv=*.*:ALL,GRANT state=present
+
+  - name: MariaDB | Copy root password config for root user
+    template: src="{{ templates_dir }}/mariadb/my.cnf.j2" dest=/root/.my.cnf
 
   - name: MariaDB | Update dev password for all dev accounts
     mysql_user: name={{ mariadb_dev_username }} host={{ item }} password={{ mariadb_dev_password }} priv=*.*:ALL,GRANT
